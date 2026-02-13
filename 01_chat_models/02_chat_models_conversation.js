@@ -1,9 +1,11 @@
-import { SystemMessage, HumanMessage } from "langchain";
+import { SystemMessage, HumanMessage, humanInTheLoopMiddleware } from "langchain";
 import { ChatOpenAI } from "@langchain/openai";
 import dotenv from "dotenv";
 
+// Load env
 dotenv.config();
 
+// create a AI Model
 const llm = new ChatOpenAI({
     model: 'nvidia/nemotron-3-nano-30b-a3b:free',
     apiKey: process.env.API_KEY,
@@ -12,15 +14,18 @@ const llm = new ChatOpenAI({
     }
 })
 
+
+// set Human message and system message
 const message = [
-    new SystemMessage("Your are an expert in social media content strategy"),
-    new HumanMessage("Give a short tip to create engaging posts on instagram")
+    new SystemMessage("You are an AI assistan!"),
+    new HumanMessage("What is the capital Of USA?")
 ]
 
-llm.invoke(message)
-    .then(result => {
-        console.log(result.content)
-    })
-    .catch(error => {
-        console.error(error)
-    })
+// invoke the model
+async function runChat() {
+    const response = await llm.invoke(message)
+    console.log(response.content)
+}
+
+
+runChat();
